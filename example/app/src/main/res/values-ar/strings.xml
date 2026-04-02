@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">مثال Localize SDK</string>
+
+    <!-- Bundle-only keys -->
+    <string name="from_bundle_only">from_bundle_only (AR - bundle)</string>
+    <string name="bundle_key">bundle_key (AR - bundle)</string>
+
+    <!-- Simple string -->
+    <string name="welcome">welcome (AR - bundle)</string>
+
+    <!-- Interpolated string -->
+    <string name="greeting">مرحباً، %s</string>
+
+    <!-- Parity string -->
+    <string name="add_company_to_dari">add_company_to_dari (AR - bundle)</string>
+</resources>
+

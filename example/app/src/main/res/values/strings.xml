@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Localize SDK Example</string>
+
+    <!-- Bundle-only keys -->
+    <string name="from_bundle_only">from_bundle_only (EN - bundle)</string>
+    <string name="bundle_key">bundle_key (EN - bundle)</string>
+
+    <!-- Simple string -->
+    <string name="welcome">welcome (EN - bundle)</string>
+
+    <!-- Interpolated string -->
+    <string name="greeting">Hello, %s</string>
+
+    <!-- String used in parity requirement examples -->
+    <string name="add_company_to_dari">add_company_to_dari (EN - bundle)</string>
+</resources>
+

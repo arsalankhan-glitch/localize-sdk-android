@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="items_count">
+        <item quantity="zero">No items</item>
+        <item quantity="one">%s item</item>
+        <item quantity="other">%s items</item>
+    </plurals>
+
+    <plurals name="years">
+        <item quantity="one">%s year</item>
+        <item quantity="other">%s years</item>
+    </plurals>
+</resources>
+

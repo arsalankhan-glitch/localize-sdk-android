@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="items_count">
+        <item quantity="zero">لا توجد عناصر</item>
+        <item quantity="one">%s عنصر</item>
+        <item quantity="two">%s عنصران</item>
+        <item quantity="few">%s عناصر</item>
+        <item quantity="many">%s عنصر</item>
+        <item quantity="other">%s عنصر</item>
+    </plurals>
+
+    <plurals name="years">
+        <item quantity="one">%s سنة</item>
+        <item quantity="two">%s سنتان</item>
+        <item quantity="few">%s سنوات</item>
+        <item quantity="many">%s سنة</item>
+        <item quantity="other">%s سنة</item>
+    </plurals>
+</resources>
+
