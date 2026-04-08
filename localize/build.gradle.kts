@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(localizeSdk.plugins.android.library)
+    alias(localizeSdk.plugins.kotlin.android)
 }
 
 group = "ae.adres"
@@ -8,10 +8,11 @@ version = "0.1.0"
 
 android {
     namespace = "ae.adres.localize"
-    compileSdk = 34
+    buildToolsVersion = "35.0.0"
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 26
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,16 +29,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(localizeSdk.okhttp)
+    implementation(localizeSdk.gson)
+    implementation(localizeSdk.kotlinx.coroutines.android)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(localizeSdk.junit)
+    testImplementation(localizeSdk.kotlinx.coroutines.test)
 }
