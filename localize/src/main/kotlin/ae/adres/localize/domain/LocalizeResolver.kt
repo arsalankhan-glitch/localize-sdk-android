@@ -11,7 +11,10 @@ package ae.adres.localize.domain
  */
 object LocalizeResolver {
     /** Resolve which store to use. Prefer apiOrCache over local. */
-    fun resolve(apiOrCache: LocalizeStore?, local: LocalizeStore?): LocalizeStore {
+    fun resolve(
+        apiOrCache: LocalizeStore?,
+        local: LocalizeStore?,
+    ): LocalizeStore {
         if (apiOrCache != null && !apiOrCache.isEmpty) return apiOrCache
         if (local != null && !local.isEmpty) return local
         return apiOrCache ?: local ?: LocalizeStore()

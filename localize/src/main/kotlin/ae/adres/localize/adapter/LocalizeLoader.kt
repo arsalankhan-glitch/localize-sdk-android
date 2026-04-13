@@ -14,14 +14,13 @@ typealias LocalBundleLoader = suspend () -> LocalizeStore?
 suspend fun defaultLocalLoader(): LocalizeStore? = LocalizeStore()
 
 /** Parse JSON string to LocalizeStore (e.g. from assets). */
-fun parseLocalBundleJson(jsonString: String): LocalizeStore? {
-    return try {
+fun parseLocalBundleJson(jsonString: String): LocalizeStore? =
+    try {
         val json = JsonParser.parseString(jsonString).asJsonObject
         parseStore(json)
     } catch (_: Exception) {
         null
     }
-}
 
 private fun parseStore(json: JsonObject): LocalizeStore? {
     val languages = json.getAsJsonObject("languages") ?: return null

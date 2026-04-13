@@ -1,16 +1,16 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(localizeSdk.plugins.android.application)
+    alias(localizeSdk.plugins.kotlin.android)
 }
 
 android {
     namespace = "ae.adres.localize.example"
-    compileSdk = 34
+    buildToolsVersion = "35.0.0"
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "ae.adres.localize.example"
-        minSdk = 21
-        targetSdk = 34
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -20,7 +20,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = false
+        dataBinding = true
         buildConfig = true
     }
 
@@ -30,19 +30,20 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.core:core-ktx:1.13.1")
-
     implementation(project(":android_localize_sdk"))
 
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test:core:1.6.1")
-    androidTestImplementation("androidx.test:runner:1.6.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-}
+    implementation(localizeSdk.androidx.appcompat)
+    implementation(localizeSdk.androidx.core.ktx)
+    implementation(localizeSdk.material)
 
+
+    androidTestImplementation(localizeSdk.androidx.test.ext.junit)
+    androidTestImplementation(localizeSdk.androidx.test.core)
+    androidTestImplementation(localizeSdk.androidx.test.runner)
+    androidTestImplementation(localizeSdk.androidx.test.espresso.core)
+}

@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PluralTest {
-
     @Test
     fun defaultPlural() {
         assertEquals("one", selectPluralForm("en", 1))

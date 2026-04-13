@@ -5,7 +5,10 @@ package ae.adres.localize.domain
  * CLDR rules: https://unicode-org.github.io/cldr-staging/charts/43/supplemental/language_plural_rules.html
  * Common forms: zero, one, two, few, many, other
  */
-fun selectPluralForm(locale: String, count: Int): String {
+fun selectPluralForm(
+    locale: String,
+    count: Int,
+): String {
     val lang = locale.split("-", "_").firstOrNull()?.lowercase() ?: locale
     return when (lang) {
         "ar" -> arabicPlural(count)

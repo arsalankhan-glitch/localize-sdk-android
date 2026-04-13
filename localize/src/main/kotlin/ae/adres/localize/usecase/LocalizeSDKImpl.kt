@@ -5,7 +5,6 @@ import ae.adres.localize.adapter.LocalBundleLoader
 import ae.adres.localize.adapter.LocalizeCache
 import ae.adres.localize.adapter.LocalizeFetcher
 import ae.adres.localize.adapter.ResourcesLocalFallback
-import ae.adres.localize.adapter.defaultLocalLoader
 import ae.adres.localize.domain.LocalizeResolver
 import ae.adres.localize.domain.LocalizeStore
 import ae.adres.localize.domain.interpolateTemplate
@@ -24,7 +23,7 @@ class LocalizeSDKImpl(
     private val fetcher: LocalizeFetcher,
     private val cache: LocalizeCache,
     private val localLoader: LocalBundleLoader,
-    private val localFallback: ResourcesLocalFallback? = null
+    private val localFallback: ResourcesLocalFallback? = null,
 ) {
     private var store: LocalizeStore = LocalizeStore()
     private var initialized = false
@@ -73,7 +72,10 @@ class LocalizeSDKImpl(
         store = LocalizeResolver.resolve(apiOrCache = cached, local = local)
     }
 
-    private fun extractLocale(full: LocalizeStore, targetLocale: String): LocalizeStore {
+    private fun extractLocale(
+        full: LocalizeStore,
+        targetLocale: String,
+    ): LocalizeStore {
         val simple = mutableMapOf<String, Map<String, String>>()
         val plural = mutableMapOf<String, Map<String, Map<String, String>>>()
         full.simple[targetLocale]?.let { simple[targetLocale] = it }
@@ -108,13 +110,19 @@ class LocalizeSDKImpl(
         }
     }
 
-    fun getString(key: String, args: List<Any>? = null): String {
+    fun getString(
+        key: String,
+        args: List<Any>? = null,
+    ): String {
         val value = resolveStringValue(key)
         if (value == null) return key
         return if (args != null && args.isNotEmpty()) interpolateTemplate(value, args) else value
     }
 
-    fun getPlural(key: String, count: Int): String {
+    fun getPlural(
+        key: String,
+        count: Int,
+    ): String {
         val fallbackValue = resolvePluralValue(key, count)
         return fallbackValue ?: key
     }
@@ -128,7 +136,10 @@ class LocalizeSDKImpl(
      */
     internal fun getStringTemplate(key: String): String? = resolveStringTemplateFromStore(key)
 
-    internal fun getPluralTemplate(key: String, count: Int): String? = resolvePluralTemplateFromStore(key, count)
+    internal fun getPluralTemplate(
+        key: String,
+        count: Int,
+    ): String? = resolvePluralTemplateFromStore(key, count)
 
     private fun resolveStringValue(key: String): String? {
         var value = store.simple[locale]?.get(key)
@@ -152,7 +163,10 @@ class LocalizeSDKImpl(
         return value
     }
 
-    private fun resolvePluralTemplateValue(key: String, count: Int): String? {
+    private fun resolvePluralTemplateValue(
+        key: String,
+        count: Int,
+    ): String? {
         val form = selectPluralForm(locale, count)
         var pluralMap = store.plural[locale]?.get(key)
         if (pluralMap == null && config.fallbackLocale != null) {
@@ -165,7 +179,10 @@ class LocalizeSDKImpl(
             ?: config.fallbackLocale?.let { localFallback?.getPlural(it, key, count) }
     }
 
-    private fun resolvePluralTemplateFromStore(key: String, count: Int): String? {
+    private fun resolvePluralTemplateFromStore(
+        key: String,
+        count: Int,
+    ): String? {
         val form = selectPluralForm(locale, count)
         var pluralMap = store.plural[locale]?.get(key)
         if (pluralMap == null && config.fallbackLocale != null) {
@@ -175,7 +192,10 @@ class LocalizeSDKImpl(
         return pluralMap[form] ?: pluralMap["other"] ?: pluralMap.values.firstOrNull()
     }
 
-    private fun resolvePluralValue(key: String, count: Int): String? {
+    private fun resolvePluralValue(
+        key: String,
+        count: Int,
+    ): String? {
         val template = resolvePluralTemplateValue(key, count) ?: return null
         return interpolateTemplate(template, listOf(count))
     }
