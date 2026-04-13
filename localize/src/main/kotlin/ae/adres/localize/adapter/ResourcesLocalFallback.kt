@@ -12,11 +12,14 @@ import java.util.Locale
  */
 class ResourcesLocalFallback(
     private val context: Context,
-    private val stringsFileName: String = "strings"
+    private val stringsFileName: String = "strings",
 ) {
     private val packageName: String = context.applicationContext.packageName
 
-    fun getString(locale: String, key: String): String? {
+    fun getString(
+        locale: String,
+        key: String,
+    ): String? {
         val res = resourcesForLocale(locale)
         val id = res.getIdentifier(key, "string", packageName)
         if (id == 0) return null
@@ -27,7 +30,11 @@ class ResourcesLocalFallback(
         }
     }
 
-    fun getPlural(locale: String, key: String, count: Int): String? {
+    fun getPlural(
+        locale: String,
+        key: String,
+        count: Int,
+    ): String? {
         val res = resourcesForLocale(locale)
         val id = res.getIdentifier(key, "plurals", packageName)
         if (id == 0) return null
@@ -39,9 +46,10 @@ class ResourcesLocalFallback(
     }
 
     private fun resourcesForLocale(locale: String): Resources {
-        val config = Configuration(context.resources.configuration).apply {
-            setLocale(Locale.forLanguageTag(locale))
-        }
+        val config =
+            Configuration(context.resources.configuration).apply {
+                setLocale(Locale.forLanguageTag(locale))
+            }
         return context.createConfigurationContext(config).resources
     }
 }

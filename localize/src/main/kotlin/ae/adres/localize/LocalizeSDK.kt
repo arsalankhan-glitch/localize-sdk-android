@@ -1,9 +1,9 @@
 package ae.adres.localize
 
 import ae.adres.localize.adapter.FileLocalizeCache
-import ae.adres.localize.adapter.LocalizeContextWrapper
 import ae.adres.localize.adapter.LocalBundleLoader
 import ae.adres.localize.adapter.LocalizeCache
+import ae.adres.localize.adapter.LocalizeContextWrapper
 import ae.adres.localize.adapter.LocalizeFetcher
 import ae.adres.localize.adapter.OkHttpLocalizeFetcher
 import ae.adres.localize.adapter.ResourcesLocalFallback
@@ -60,29 +60,31 @@ object LocalizeSDK {
         stringsFileName: String = "strings",
         fetcher: LocalizeFetcher? = null,
         cache: LocalizeCache? = null,
-        localFallback: ResourcesLocalFallback? = null
+        localFallback: ResourcesLocalFallback? = null,
     ) {
-        val config = LocalizeConfig(
-            apiKey = apiKey,
-            platform = platform,
-            baseUrl = baseUrl ?: "https://localize-dev-api.adres.ae",
-            onKeysUpdated = onKeysUpdated,
-            fallbackLocale = fallbackLocale,
-            timeoutSeconds = timeoutSeconds,
-            enableLogging = enableLogging,
-            stringsFileName = stringsFileName
-        )
+        val config =
+            LocalizeConfig(
+                apiKey = apiKey,
+                platform = platform,
+                baseUrl = baseUrl ?: "https://localize-dev-api.adres.ae",
+                onKeysUpdated = onKeysUpdated,
+                fallbackLocale = fallbackLocale,
+                timeoutSeconds = timeoutSeconds,
+                enableLogging = enableLogging,
+                stringsFileName = stringsFileName,
+            )
         contextRef = WeakReference(context.applicationContext)
         val appContext = context.applicationContext
         val cacheDir = appContext.cacheDir
         val fallback = localFallback ?: ResourcesLocalFallback(appContext, stringsFileName)
-        val impl = LocalizeSDKImpl(
-            config = config,
-            fetcher = fetcher ?: OkHttpLocalizeFetcher(config),
-            cache = cache ?: FileLocalizeCache(config, cacheDir),
-            localLoader = localLoader ?: { defaultLocalLoader() },
-            localFallback = fallback
-        )
+        val impl =
+            LocalizeSDKImpl(
+                config = config,
+                fetcher = fetcher ?: OkHttpLocalizeFetcher(config),
+                cache = cache ?: FileLocalizeCache(config, cacheDir),
+                localLoader = localLoader ?: { defaultLocalLoader() },
+                localFallback = fallback,
+            )
         instance = impl
         scope.launch {
             withContext(Dispatchers.IO) { impl.initStore() }
@@ -99,9 +101,7 @@ object LocalizeSDK {
      * Wrap a Context so native getString/getQuantityString calls become SDK-aware.
      * Use in Application/Activity attachBaseContext.
      */
-    fun wrapContext(baseContext: android.content.Context): android.content.Context {
-        return LocalizeContextWrapper(baseContext)
-    }
+    fun wrapContext(baseContext: android.content.Context): android.content.Context = LocalizeContextWrapper(baseContext)
 
     /** Get the current locale. */
     fun getLocale(): String = instance?.locale ?: "en"
@@ -112,14 +112,16 @@ object LocalizeSDK {
     }
 
     /** Get a simple string. */
-    fun getString(key: String, args: List<Any>? = null): String {
-        return instance?.getString(key, args) ?: key
-    }
+    fun getString(
+        key: String,
+        args: List<Any>? = null,
+    ): String = instance?.getString(key, args) ?: key
 
     /** Get a plural string. */
-    fun getPlural(key: String, count: Int): String {
-        return instance?.getPlural(key, count) ?: key
-    }
+    fun getPlural(
+        key: String,
+        count: Int,
+    ): String = instance?.getPlural(key, count) ?: key
 
     /** Check if SDK is configured. */
     fun isConfigured(): Boolean = instance != null
@@ -130,11 +132,10 @@ object LocalizeSDK {
         contextRef = null
     }
 
-    internal fun resolveStringTemplateForResourceKey(key: String): String? {
-        return instance?.getStringTemplate(key)
-    }
+    internal fun resolveStringTemplateForResourceKey(key: String): String? = instance?.getStringTemplate(key)
 
-    internal fun resolvePluralTemplateForResourceKey(key: String, quantity: Int): String? {
-        return instance?.getPluralTemplate(key, quantity)
-    }
+    internal fun resolvePluralTemplateForResourceKey(
+        key: String,
+        quantity: Int,
+    ): String? = instance?.getPluralTemplate(key, quantity)
 }

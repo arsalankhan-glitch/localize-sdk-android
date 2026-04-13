@@ -6,7 +6,10 @@ package ae.adres.localize.domain
  * Android templates typically use `%s` / `%d`, but the SDK also supports `%@` (from the shared
  * API format) by replacing sequentially in the order placeholders appear.
  */
-internal fun interpolateTemplate(template: String, args: List<Any>): String {
+internal fun interpolateTemplate(
+    template: String,
+    args: List<Any>,
+): String {
     val matches = Regex("%[sd@]").findAll(template).toList()
     if (matches.isEmpty() || args.isEmpty()) return template
 
@@ -19,4 +22,3 @@ internal fun interpolateTemplate(template: String, args: List<Any>): String {
     }
     return result
 }
-
