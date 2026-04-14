@@ -40,10 +40,14 @@ class LocalizeContextWrapper(
     }
 }
 
-private class LocalizeResourcesProxy(
+class LocalizeResourcesProxy(
     private val base: Resources,
 ) : @Suppress("DEPRECATION")
-    Resources(base.assets, base.displayMetrics, base.configuration) {
+Resources(base.assets, base.displayMetrics, base.configuration) {
+
+    fun getString(key: String): String? =
+        LocalizeSDK.resolveStringTemplateForResourceKey(key)
+
     override fun getConfiguration(): Configuration = base.configuration
 
     override fun getDisplayMetrics(): DisplayMetrics? = base.displayMetrics

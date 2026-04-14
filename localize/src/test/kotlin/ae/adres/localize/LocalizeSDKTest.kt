@@ -155,6 +155,22 @@ class LocalizeSDKTest {
     fun interpolateTemplateSupportsAtSymbolPlaceholder() {
         assertEquals("Value: X", interpolateTemplate("Value: %@ ", listOf("X")).trim())
     }
+
+    @Test
+    fun interpolateTemplateSupportsPositionalArguments() {
+        assertEquals(
+            "Second First",
+            interpolateTemplate("%2\$s %1\$s", listOf("First", "Second")),
+        )
+    }
+
+    @Test
+    fun interpolateTemplateSupportsMixedPositionalAndSequential() {
+        assertEquals(
+            "First Second Third",
+            interpolateTemplate("%s %2\$s %s", listOf("First", "Second", "Third")),
+        )
+    }
 }
 
 private class MockCache(
