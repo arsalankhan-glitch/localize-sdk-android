@@ -43,10 +43,8 @@ class LocalizeContextWrapper(
 class LocalizeResourcesProxy(
     private val base: Resources,
 ) : @Suppress("DEPRECATION")
-Resources(base.assets, base.displayMetrics, base.configuration) {
-
-    fun getString(key: String): String? =
-        LocalizeSDK.resolveStringTemplateForResourceKey(key)
+    Resources(base.assets, base.displayMetrics, base.configuration) {
+    fun getString(key: String): String? = LocalizeSDK.resolveStringTemplateForResourceKey(key)
 
     override fun getConfiguration(): Configuration = base.configuration
 
@@ -59,7 +57,7 @@ Resources(base.assets, base.displayMetrics, base.configuration) {
 
     override fun getString(
         id: Int,
-        vararg formatArgs: Any,
+        vararg formatArgs: Any?,
     ): String {
         val key = safeEntryName(id) ?: return base.getString(id, *formatArgs)
         val template =
@@ -84,7 +82,7 @@ Resources(base.assets, base.displayMetrics, base.configuration) {
     override fun getQuantityString(
         id: Int,
         quantity: Int,
-        vararg formatArgs: Any,
+        vararg formatArgs: Any?,
     ): String {
         val key = safeEntryName(id) ?: return base.getQuantityString(id, quantity, *formatArgs)
         val template =

@@ -10,28 +10,30 @@ package ae.adres.localize.domain
  */
 internal fun interpolateTemplate(
     template: String,
-    args: List<Any>,
+    args: List<Any?>,
 ): String {
     val regex = Regex("""%(?:(\d+)\$)?([sd@])""")
     val matches = regex.findAll(template).toList()
     if (matches.isEmpty() || args.isEmpty()) return template
 
     var nextSequentialIdx = 0
-    val matchesWithIndices = matches.map { match ->
-        val indexStr = match.groupValues[1]
-        val argIdx = if (indexStr.isNotEmpty()) {
-            indexStr.toIntOrNull()?.minus(1) ?: -1
-        } else {
-            nextSequentialIdx++
+    val matchesWithIndices =
+        matches.map { match ->
+            val indexStr = match.groupValues[1]
+            val argIdx =
+                if (indexStr.isNotEmpty()) {
+                    indexStr.toIntOrNull()?.minus(1) ?: -1
+                } else {
+                    nextSequentialIdx++
+                }
+            match to argIdx
         }
-        match to argIdx
-    }
 
     var result = template
     matchesWithIndices.reversed().forEach { (match, argIdx) ->
         if (argIdx in args.indices) {
-            result = result.replaceRange(match.range, args[argIdx].toString())
+            result = result.replaceRange(match.range, args[argIdx]?.toString() ?: "")
         }
     }
-    return result
+    return  result.replace("%%", "%")
 }
