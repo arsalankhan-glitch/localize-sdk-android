@@ -27,6 +27,12 @@ class LocalizeSDKTest {
     }
 
     @Test
+    fun defaultBaseUrlIsProduction() {
+        val config = LocalizeConfig(apiKey = "test")
+        assertEquals("https://localize-api.adres.ae", config.normalizedBaseUrl)
+    }
+
+    @Test
     fun configureAndGetString() = runTest {
         val store = LocalizeStore(
             simple = mapOf("en" to mapOf("welcome" to "Welcome!")),
