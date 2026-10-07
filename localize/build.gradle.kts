@@ -4,8 +4,9 @@ plugins {
     `maven-publish`
 }
 
-group = "ae.adres"
-version = (findProperty("sdkVersion") as String?) ?: "0.1.0"
+// JitPack sets VERSION to the git tag being built.
+group = "com.github.arsalankhan-glitch"
+version = System.getenv("VERSION") ?: "0.1.0"
 
 android {
     namespace = "ae.adres.localize"
@@ -45,21 +46,11 @@ android {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "ae.adres"
-            artifactId = "localize-sdk"
+            groupId = "com.github.arsalankhan-glitch"
+            artifactId = "localize-sdk-android"
             version = project.version.toString()
             afterEvaluate {
                 from(components["release"])
-            }
-        }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/arsalankhan-glitch/localize-sdk")
-            credentials {
-                username = (findProperty("gpr.user") as String?) ?: System.getenv("GITHUB_ACTOR")
-                password = (findProperty("gpr.key") as String?) ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }

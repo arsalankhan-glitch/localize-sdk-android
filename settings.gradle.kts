@@ -5,10 +5,6 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-plugins {
-    id("com.android.library") version "8.7.2" apply false
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-}
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -21,5 +17,5 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "localize-sdk"
-include(":android")
+rootProject.name = "localize-sdk-android"
+include(":localize", ":example")
