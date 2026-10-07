@@ -10,10 +10,8 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.io.File
 
 class LocalizeSDKTest {
-
     @Before
     @After
     fun reset() {
@@ -33,105 +31,120 @@ class LocalizeSDKTest {
     }
 
     @Test
-    fun configureAndGetString() = runTest {
-        val store = LocalizeStore(
-            simple = mapOf("en" to mapOf("welcome" to "Welcome!")),
-            plural = emptyMap()
-        )
-        val config = LocalizeConfig(apiKey = "test", platform = "android")
-        val cache = MockCache(store)
-        val fetcher = MockFetcher(null)
-        val impl = LocalizeSDKImpl(
-            config = config,
-            fetcher = fetcher,
-            cache = cache,
-            localLoader = { null }
-        )
-        impl.initStore()
+    fun configureAndGetString() =
+        runTest {
+            val store =
+                LocalizeStore(
+                    simple = mapOf("en" to mapOf("welcome" to "Welcome!")),
+                    plural = emptyMap(),
+                )
+            val config = LocalizeConfig(apiKey = "test", platform = "android")
+            val cache = MockCache(store)
+            val fetcher = MockFetcher(null)
+            val impl =
+                LocalizeSDKImpl(
+                    config = config,
+                    fetcher = fetcher,
+                    cache = cache,
+                    localLoader = { null },
+                )
+            impl.initStore()
 
-        impl.locale = "en"
-        assertEquals("Welcome!", impl.getString("welcome"))
-        assertEquals("missing", impl.getString("missing"))
-    }
-
-    @Test
-    fun getPlural() = runTest {
-        val store = LocalizeStore(
-            simple = emptyMap(),
-            plural = mapOf("en" to mapOf("items" to mapOf("one" to "1 item", "other" to "%d items")))
-        )
-        val config = LocalizeConfig(apiKey = "test", platform = "android")
-        val cache = MockCache(store)
-        val impl = LocalizeSDKImpl(
-            config = config,
-            fetcher = MockFetcher(null),
-            cache = cache,
-            localLoader = { null }
-        )
-        impl.initStore()
-
-        impl.locale = "en"
-        assertEquals("1 item", impl.getPlural("items", 1))
-        assertEquals("5 items", impl.getPlural("items", 5))
-    }
+            impl.locale = "en"
+            assertEquals("Welcome!", impl.getString("welcome"))
+            assertEquals("missing", impl.getString("missing"))
+        }
 
     @Test
-    fun interpolation() = runTest {
-        val store = LocalizeStore(
-            simple = mapOf("en" to mapOf("greeting" to "Hello, %s!")),
-            plural = emptyMap()
-        )
-        val config = LocalizeConfig(apiKey = "test", platform = "android")
-        val cache = MockCache(store)
-        val impl = LocalizeSDKImpl(
-            config = config,
-            fetcher = MockFetcher(null),
-            cache = cache,
-            localLoader = { null }
-        )
-        impl.initStore()
+    fun getPlural() =
+        runTest {
+            val store =
+                LocalizeStore(
+                    simple = emptyMap(),
+                    plural = mapOf("en" to mapOf("items" to mapOf("one" to "1 item", "other" to "%d items"))),
+                )
+            val config = LocalizeConfig(apiKey = "test", platform = "android")
+            val cache = MockCache(store)
+            val impl =
+                LocalizeSDKImpl(
+                    config = config,
+                    fetcher = MockFetcher(null),
+                    cache = cache,
+                    localLoader = { null },
+                )
+            impl.initStore()
 
-        impl.locale = "en"
-        assertEquals("Hello, John!", impl.getString("greeting", args = listOf("John")))
-    }
-
-    @Test
-    fun getStringTemplateReturnsRawValue() = runTest {
-        val store = LocalizeStore(
-            simple = mapOf("en" to mapOf("greeting" to "Hello, %s!")),
-            plural = emptyMap()
-        )
-        val impl = LocalizeSDKImpl(
-            config = LocalizeConfig(apiKey = "test", platform = "android"),
-            fetcher = MockFetcher(null),
-            cache = MockCache(store),
-            localLoader = { null }
-        )
-        impl.initStore()
-
-        impl.locale = "en"
-        assertEquals("Hello, %s!", impl.getStringTemplate("greeting"))
-        assertEquals(null, impl.getStringTemplate("missing"))
-    }
+            impl.locale = "en"
+            assertEquals("1 item", impl.getPlural("items", 1))
+            assertEquals("5 items", impl.getPlural("items", 5))
+        }
 
     @Test
-    fun getPluralTemplateReturnsFormWithoutInterpolation() = runTest {
-        val store = LocalizeStore(
-            simple = emptyMap(),
-            plural = mapOf("en" to mapOf("years" to mapOf("one" to "%d year", "other" to "%d years")))
-        )
-        val impl = LocalizeSDKImpl(
-            config = LocalizeConfig(apiKey = "test", platform = "android"),
-            fetcher = MockFetcher(null),
-            cache = MockCache(store),
-            localLoader = { null }
-        )
-        impl.initStore()
+    fun interpolation() =
+        runTest {
+            val store =
+                LocalizeStore(
+                    simple = mapOf("en" to mapOf("greeting" to "Hello, %s!")),
+                    plural = emptyMap(),
+                )
+            val config = LocalizeConfig(apiKey = "test", platform = "android")
+            val cache = MockCache(store)
+            val impl =
+                LocalizeSDKImpl(
+                    config = config,
+                    fetcher = MockFetcher(null),
+                    cache = cache,
+                    localLoader = { null },
+                )
+            impl.initStore()
 
-        impl.locale = "en"
-        assertEquals("%d year", impl.getPluralTemplate("years", 1))
-        assertEquals("%d years", impl.getPluralTemplate("years", 2))
-    }
+            impl.locale = "en"
+            assertEquals("Hello, John!", impl.getString("greeting", args = listOf("John")))
+        }
+
+    @Test
+    fun getStringTemplateReturnsRawValue() =
+        runTest {
+            val store =
+                LocalizeStore(
+                    simple = mapOf("en" to mapOf("greeting" to "Hello, %s!")),
+                    plural = emptyMap(),
+                )
+            val impl =
+                LocalizeSDKImpl(
+                    config = LocalizeConfig(apiKey = "test", platform = "android"),
+                    fetcher = MockFetcher(null),
+                    cache = MockCache(store),
+                    localLoader = { null },
+                )
+            impl.initStore()
+
+            impl.locale = "en"
+            assertEquals("Hello, %s!", impl.getStringTemplate("greeting"))
+            assertEquals(null, impl.getStringTemplate("missing"))
+        }
+
+    @Test
+    fun getPluralTemplateReturnsFormWithoutInterpolation() =
+        runTest {
+            val store =
+                LocalizeStore(
+                    simple = emptyMap(),
+                    plural = mapOf("en" to mapOf("years" to mapOf("one" to "%d year", "other" to "%d years"))),
+                )
+            val impl =
+                LocalizeSDKImpl(
+                    config = LocalizeConfig(apiKey = "test", platform = "android"),
+                    fetcher = MockFetcher(null),
+                    cache = MockCache(store),
+                    localLoader = { null },
+                )
+            impl.initStore()
+
+            impl.locale = "en"
+            assertEquals("%d year", impl.getPluralTemplate("years", 1))
+            assertEquals("%d years", impl.getPluralTemplate("years", 2))
+        }
 
     @Test
     fun interpolateTemplateReplacesAllPlaceholdersInOrder() {
@@ -139,8 +152,8 @@ class LocalizeSDKTest {
             "Hello John, you have 3 messages",
             interpolateTemplate(
                 "Hello %s, you have %d messages",
-                listOf("John", 3)
-            )
+                listOf("John", 3),
+            ),
         )
     }
 
@@ -148,13 +161,36 @@ class LocalizeSDKTest {
     fun interpolateTemplateSupportsAtSymbolPlaceholder() {
         assertEquals("Value: X", interpolateTemplate("Value: %@ ", listOf("X")).trim())
     }
+
+    @Test
+    fun interpolateTemplateSupportsPositionalArguments() {
+        assertEquals(
+            "Second First",
+            interpolateTemplate("%2\$s %1\$s", listOf("First", "Second")),
+        )
+    }
+
+    @Test
+    fun interpolateTemplateSupportsMixedPositionalAndSequential() {
+        assertEquals(
+            "First Second Third",
+            interpolateTemplate("%s %2\$s %s", listOf("First", "Second", "Third")),
+        )
+    }
 }
 
-private class MockCache(private var store: LocalizeStore?) : LocalizeCache {
+private class MockCache(
+    private var store: LocalizeStore?,
+) : LocalizeCache {
     override suspend fun load(locale: String): LocalizeStore? = store
-    override suspend fun save(s: LocalizeStore) { store = s }
+
+    override suspend fun save(s: LocalizeStore) {
+        store = s
+    }
 }
 
-private class MockFetcher(private val result: LocalizeStore?) : LocalizeFetcher {
+private class MockFetcher(
+    private val result: LocalizeStore?,
+) : LocalizeFetcher {
     override suspend fun fetch(): LocalizeStore? = result
 }

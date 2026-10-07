@@ -7,16 +7,17 @@ package ae.adres.localize.domain
  */
 data class LocalizeStore(
     val simple: Map<String, Map<String, String>> = emptyMap(),
-    val plural: Map<String, Map<String, Map<String, String>>> = emptyMap()
+    val plural: Map<String, Map<String, Map<String, String>>> = emptyMap(),
 ) {
     val isEmpty: Boolean get() = simple.isEmpty() && plural.isEmpty()
 
     /** Deep copy for immutability when replacing store. */
     fun deepCopy(): LocalizeStore {
         val newSimple = simple.mapValues { (_, v) -> v.toMap() }
-        val newPlural = plural.mapValues { (_, keys) ->
-            keys.mapValues { (_, forms) -> forms.toMap() }
-        }
+        val newPlural =
+            plural.mapValues { (_, keys) ->
+                keys.mapValues { (_, forms) -> forms.toMap() }
+            }
         return LocalizeStore(simple = newSimple, plural = newPlural)
     }
 }

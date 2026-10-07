@@ -12,7 +12,7 @@ data class LocalizeConfig(
     val timeoutSeconds: Int = 10,
     val enableLogging: Boolean = true,
     /** Base name for strings resource file (default "strings" -> strings.xml). */
-    val stringsFileName: String = "strings"
+    val stringsFileName: String = "strings",
 ) {
     val normalizedBaseUrl: String = baseUrl.trimEnd('/')
 }

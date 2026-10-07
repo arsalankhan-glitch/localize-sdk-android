@@ -4,14 +4,15 @@ import ae.adres.localize.LocalizeConfig
 import ae.adres.localize.domain.LocalizeStore
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import java.io.File
-import java.security.MessageDigest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.security.MessageDigest
 
 /** Interface for disk cache of localization data. */
 interface LocalizeCache {
     suspend fun load(locale: String): LocalizeStore?
+
     suspend fun save(store: LocalizeStore)
 }
 
@@ -20,50 +21,60 @@ interface LocalizeCache {
  */
 class FileLocalizeCache(
     private val config: LocalizeConfig,
-    private val cacheDir: File
+    private val cacheDir: File,
 ) : LocalizeCache {
-
     private val prefix = "localize_${hashPrefix(config.apiKey)}_${config.platform}"
 
-    private fun cacheFileForLocale(locale: String): File =
-        File(cacheDir, "${prefix}_$locale.json")
+    private fun cacheFileForLocale(locale: String): File = File(cacheDir, "${prefix}_$locale.json")
 
-    override suspend fun load(locale: String): LocalizeStore? = withContext(Dispatchers.IO) {
-        val file = cacheFileForLocale(locale)
-        if (!file.exists()) return@withContext tryMigrateFromLegacy(locale)
-        try {
-            val content = file.readText()
-            if (content.isEmpty()) return@withContext null
-            val json = com.google.gson.JsonParser.parseString(content).asJsonObject
-            parseLocaleFile(json, locale)
-        } catch (_: Exception) {
-            null
+    override suspend fun load(locale: String): LocalizeStore? =
+        withContext(Dispatchers.IO) {
+            val file = cacheFileForLocale(locale)
+            if (!file.exists()) return@withContext tryMigrateFromLegacy(locale)
+            try {
+                val content = file.readText()
+                if (content.isEmpty()) return@withContext null
+                val json =
+                    com.google.gson.JsonParser
+                        .parseString(content)
+                        .asJsonObject
+                parseLocaleFile(json, locale)
+            } catch (_: Exception) {
+                null
+            }
         }
-    }
 
-    private suspend fun tryMigrateFromLegacy(locale: String): LocalizeStore? = withContext(Dispatchers.IO) {
-        val legacyFile = File(cacheDir, "$prefix.json")
-        if (!legacyFile.exists()) return@withContext null
-        try {
-            val content = legacyFile.readText()
-            if (content.isEmpty()) return@withContext null
-            val json = com.google.gson.JsonParser.parseString(content).asJsonObject
-            val full = parseLegacyStore(json) ?: return@withContext null
-            save(full)
-            legacyFile.delete()
-            val simple = full.simple[locale]?.let { mapOf(locale to it) } ?: emptyMap()
-            val plural = full.plural[locale]?.let { mapOf(locale to it) } ?: emptyMap()
-            LocalizeStore(simple = simple, plural = plural)
-        } catch (_: Exception) {
-            null
+    private suspend fun tryMigrateFromLegacy(locale: String): LocalizeStore? =
+        withContext(Dispatchers.IO) {
+            val legacyFile = File(cacheDir, "$prefix.json")
+            if (!legacyFile.exists()) return@withContext null
+            try {
+                val content = legacyFile.readText()
+                if (content.isEmpty()) return@withContext null
+                val json =
+                    com.google.gson.JsonParser
+                        .parseString(content)
+                        .asJsonObject
+                val full = parseLegacyStore(json) ?: return@withContext null
+                save(full)
+                legacyFile.delete()
+                val simple = full.simple[locale]?.let { mapOf(locale to it) } ?: emptyMap()
+                val plural = full.plural[locale]?.let { mapOf(locale to it) } ?: emptyMap()
+                LocalizeStore(simple = simple, plural = plural)
+            } catch (_: Exception) {
+                null
+            }
         }
-    }
 
-    private fun parseLocaleFile(json: JsonObject, locale: String): LocalizeStore? {
+    private fun parseLocaleFile(
+        json: JsonObject,
+        locale: String,
+    ): LocalizeStore? {
         val simpleRaw = json.getAsJsonObject("simple")
-        val simple = mapOf(
-            locale to (simpleRaw?.keySet()?.associateWith { simpleRaw.get(it).asString } ?: emptyMap())
-        )
+        val simple =
+            mapOf(
+                locale to (simpleRaw?.keySet()?.associateWith { simpleRaw.get(it).asString } ?: emptyMap()),
+            )
         val pluralRaw = json.getAsJsonObject("plural")
         val pluralInner = mutableMapOf<String, Map<String, String>>()
         pluralRaw?.keySet()?.forEach { key ->
@@ -93,19 +104,22 @@ class FileLocalizeCache(
         return LocalizeStore(simple = simple, plural = plural)
     }
 
-    override suspend fun save(store: LocalizeStore) = withContext(Dispatchers.IO) {
-        val allLocales = store.simple.keys + store.plural.keys
-        for (locale in allLocales) {
-            try {
-                val json = mapOf(
-                    "locale" to locale,
-                    "simple" to (store.simple[locale] ?: emptyMap()),
-                    "plural" to (store.plural[locale] ?: emptyMap())
-                )
-                cacheFileForLocale(locale).writeText(Gson().toJson(json))
-            } catch (_: Exception) { }
+    override suspend fun save(store: LocalizeStore) =
+        withContext(Dispatchers.IO) {
+            val allLocales = store.simple.keys + store.plural.keys
+            for (locale in allLocales) {
+                try {
+                    val json =
+                        mapOf(
+                            "locale" to locale,
+                            "simple" to (store.simple[locale] ?: emptyMap()),
+                            "plural" to (store.plural[locale] ?: emptyMap()),
+                        )
+                    cacheFileForLocale(locale).writeText(Gson().toJson(json))
+                } catch (_: Exception) {
+                }
+            }
         }
-    }
 
     companion object {
         internal fun hashPrefix(apiKey: String): String {
