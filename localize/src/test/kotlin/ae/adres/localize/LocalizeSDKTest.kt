@@ -5,17 +5,30 @@ import ae.adres.localize.adapter.LocalizeFetcher
 import ae.adres.localize.domain.LocalizeStore
 import ae.adres.localize.domain.interpolateTemplate
 import ae.adres.localize.usecase.LocalizeSDKImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class LocalizeSDKTest {
+    // LocalizeSDK runs on Dispatchers.Main, which plain JVM unit tests don't provide.
     @Before
-    @After
-    fun reset() {
+    fun setUp() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         LocalizeSDK.resetForTesting()
+    }
+
+    @After
+    fun tearDown() {
+        LocalizeSDK.resetForTesting()
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -172,8 +185,9 @@ class LocalizeSDKTest {
 
     @Test
     fun interpolateTemplateSupportsMixedPositionalAndSequential() {
+        // Matches String.format: sequential placeholders count independently of positional ones.
         assertEquals(
-            "First Second Third",
+            "First Second Second",
             interpolateTemplate("%s %2\$s %s", listOf("First", "Second", "Third")),
         )
     }
