@@ -1,10 +1,10 @@
-# Localize Android SDK
+# Localiq Android SDK
 
 [![JitPack](https://jitpack.io/v/arsalankhan-glitch/localize-sdk-android.svg)](https://jitpack.io/#arsalankhan-glitch/localize-sdk-android) [![License](https://img.shields.io/github/license/arsalankhan-glitch/localize-sdk-android)](LICENSE) ![API 26+](https://img.shields.io/badge/API-26%2B-brightgreen.svg) ![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF.svg)
 
 ## 👋 Introduction
 
-Localize lets your team manage your app's text and translations in one place and update them without shipping a new release. The SDK downloads the latest translations at runtime, caches them on the device, and falls back to the strings bundled in your app when it's offline.
+Localiq lets your team manage your app's text and translations in one place and update them without shipping a new release. The SDK downloads the latest translations at runtime, caches them on the device, and falls back to the strings bundled in your app when it's offline.
 
 This is the Kotlin SDK for Android. It falls back to your app's `strings.xml` and can also serve native `getString` calls.
 
