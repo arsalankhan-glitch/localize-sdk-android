@@ -1,15 +1,27 @@
-# Localize SDK for Android
+# Localize Android SDK
 
-Kotlin SDK that fetches translations from the Localize API and falls back to your app's `strings.xml` when offline. It can also intercept native `getString` calls.
+[![JitPack](https://jitpack.io/v/arsalankhan-glitch/localize-sdk-android.svg)](https://jitpack.io/#arsalankhan-glitch/localize-sdk-android) [![License](https://img.shields.io/github/license/arsalankhan-glitch/localize-sdk-android)](LICENSE) ![API 26+](https://img.shields.io/badge/API-26%2B-brightgreen.svg) ![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF.svg)
 
-Example app: [`example/`](example/). Run it with `./gradlew :example:installDebug -PLOCALIZE_EXAMPLE_API_KEY=pk_xxx`, or set `LOCALIZE_EXAMPLE_API_KEY` in `~/.gradle/gradle.properties` or as an environment variable.
+## 👋 Introduction
 
-## Requirements
+Localize lets your team manage your app's text and translations in one place and update them without shipping a new release. The SDK downloads the latest translations at runtime, caches them on the device, and falls back to the strings bundled in your app when it's offline.
+
+This is the Kotlin SDK for Android. It falls back to your app's `strings.xml` and can also serve native `getString` calls.
+
+Also available for [iOS](https://github.com/arsalankhan-glitch/localize-sdk-ios) · [Flutter](https://github.com/arsalankhan-glitch/localize-sdk-flutter) · [React Native](https://github.com/arsalankhan-glitch/localize-sdk-react-native).
+
+To get started, sign up [here](https://localiq.yaxbi.com/signup).
+
+## 📱 Example app
+
+See [`example/`](example/). Run it with `./gradlew :example:installDebug -PLOCALIZE_EXAMPLE_API_KEY=pk_xxx`, or set `LOCALIZE_EXAMPLE_API_KEY` in `~/.gradle/gradle.properties` or as an environment variable.
+
+## 📋 Requirements
 
 - `minSdk` 26 or higher
 - Built with Android Gradle Plugin 8.7.2 and Kotlin 2.0.21
 
-## Installation
+## 🎉 Installation
 
 The SDK is published through [JitPack](https://jitpack.io/#arsalankhan-glitch/localize-sdk-android). No account or token is needed.
 
@@ -35,18 +47,7 @@ dependencies {
 
 The SDK declares the `INTERNET` permission itself, so you don't need to add it to your manifest.
 
-## Publishing a new version
-
-Push a git tag with the version number. JitPack builds that tag the first time someone requests it:
-
-```bash
-git tag 0.2.0
-git push origin 0.2.0
-```
-
-To test a build locally, run `./gradlew :localize:publishReleasePublicationToMavenLocal` and add `mavenLocal()` to your app's repositories.
-
-## Setup
+## 🚀 Setup
 
 Call `configure` once in your `Application.onCreate`:
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-## Usage
+## 💡 Usage
 
 ```kotlin
 // Simple string
@@ -100,7 +101,7 @@ LocalizeSDK.setLocale("ar")
 LocalizeSDK.refresh()
 ```
 
-## Configuration options
+## ⚙️ Configuration options
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -113,7 +114,7 @@ LocalizeSDK.refresh()
 | `onKeysUpdated` | `() -> Unit` | `null` | Called after each successful refresh |
 | `onReady` | `() -> Unit` | `null` | Called when initial load completes |
 
-## How it works
+## 🔍 How it works
 
 1. On `configure`, the SDK fetches all translations from the API (every locale) and caches them on disk.
 2. If the fetch fails, the SDK uses the cached translations for the current locale.
@@ -121,6 +122,17 @@ LocalizeSDK.refresh()
 4. Call `refresh()` at any time to pull the latest translations in the background.
 5. Call `setLocale("ar")` to switch locale. The SDK reads that locale from the cache, with no network request.
 
-## License
+## 📦 Publishing a new version
+
+Push a git tag with the version number. JitPack builds that tag the first time someone requests it:
+
+```bash
+git tag 0.2.0
+git push origin 0.2.0
+```
+
+To test a build locally, run `./gradlew :localize:publishReleasePublicationToMavenLocal` and add `mavenLocal()` to your app's repositories.
+
+## 📄 License
 
 [MIT](LICENSE)
